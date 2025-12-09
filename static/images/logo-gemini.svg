@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60" width="280" height="60">
+  <!-- Logo Gemini Consulting -->
+  <!-- Texte "GEMINI" -->
+  <text x="0" y="45" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="#4DB6AC" letter-spacing="2">GEMINI</text>
+
+  <!-- Symbole Gemini (♊) stylisé -->
+  <g transform="translate(220, 8)" stroke="#4DB6AC" stroke-width="3.5" fill="none" stroke-linecap="round">
+    <!-- Ligne horizontale haute -->
+    <path d="M 0 4 Q 22 0, 44 4"/>
+    <!-- Ligne horizontale basse -->
+    <path d="M 0 40 Q 22 44, 44 40"/>
+    <!-- Ligne verticale gauche -->
+    <line x1="8" y1="4" x2="8" y2="40"/>
+    <!-- Ligne verticale droite -->
+    <line x1="36" y1="4" x2="36" y2="40"/>
+  </g>
+</svg>

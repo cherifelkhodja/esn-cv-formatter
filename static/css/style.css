@@ -4,14 +4,14 @@
    ============================================================================= */
 
 /* -----------------------------------------------------------------------------
-   Variables CSS - Palette de couleurs moderne
+   Variables CSS - Palette de couleurs Gemini Consulting
    ----------------------------------------------------------------------------- */
 :root {
-    /* Couleurs principales */
-    --primary: #6366f1;
-    --primary-dark: #4f46e5;
-    --primary-light: #a5b4fc;
-    --primary-bg: #eef2ff;
+    /* Couleurs principales - Gemini Teal */
+    --primary: #4DB6AC;
+    --primary-dark: #00897B;
+    --primary-light: #80CBC4;
+    --primary-bg: #E0F2F1;
 
     /* Couleurs secondaires */
     --success: #10b981;
@@ -83,25 +83,54 @@ a:hover {
 }
 
 /* -----------------------------------------------------------------------------
-   Navbar - Design épuré
+   Navbar - Design avec logo Gemini
    ----------------------------------------------------------------------------- */
 .navbar {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
-    padding: 1rem 0;
-    box-shadow: var(--shadow-md);
+    background: white !important;
+    padding: 0.875rem 0;
+    box-shadow: var(--shadow);
+    border-bottom: 3px solid var(--primary);
 }
 
 .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 600;
     letter-spacing: -0.025em;
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    color: var(--gray-800) !important;
 }
 
-.navbar-brand i {
-    font-size: 1.75rem;
+.navbar-brand:hover {
+    color: var(--gray-900) !important;
+}
+
+.navbar-brand img {
+    height: 36px;
+    width: auto;
+}
+
+.navbar-separator {
+    width: 1px;
+    height: 28px;
+    background: var(--gray-300);
+    margin: 0 0.25rem;
+}
+
+.navbar-app-name {
+    color: var(--gray-600);
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.badge-version {
+    background: var(--primary-bg) !important;
+    color: var(--primary-dark) !important;
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius);
 }
 
 /* -----------------------------------------------------------------------------
@@ -287,13 +316,13 @@ a:hover {
 .btn-primary {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
-    box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 14px 0 rgba(77, 182, 172, 0.4);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px 0 rgba(99, 102, 241, 0.5);
-    background: linear-gradient(135deg, var(--primary-dark) 0%, #4338ca 100%);
+    box-shadow: 0 6px 20px 0 rgba(77, 182, 172, 0.5);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #00695C 100%);
 }
 
 .btn-primary:active {
@@ -644,9 +673,23 @@ a:hover {
    ----------------------------------------------------------------------------- */
 .footer {
     background: white !important;
-    border-top: 1px solid var(--gray-200);
+    border-top: 3px solid var(--primary);
     padding: 1.5rem 0;
     margin-top: auto;
+}
+
+.footer-logo {
+    opacity: 0.8;
+    transition: opacity var(--transition-fast);
+}
+
+.footer-logo:hover {
+    opacity: 1;
+}
+
+.footer-text {
+    color: var(--gray-500);
+    font-size: 0.875rem;
 }
 
 .footer-content {
