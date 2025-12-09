@@ -157,8 +157,8 @@ RÈGLES IMPORTANTES :
 2. Anonymisation : NE JAMAIS inclure l'email, le téléphone ou l'adresse du candidat.
 3. Synthèse : Reformule les tâches pour qu'elles soient professionnelles et concises.
 4. CONCISION : Va à l'essentiel, évite les listes trop longues.
-5. FORMAT DES DATES : "Mois Année à Mois Année" (ex: "Janvier 2020 à Décembre 2022") ou "Depuis Mois Année" pour le poste actuel.
-6. NOMS DES CLIENTS : Toujours utiliser le nom COMPLET de l'entreprise/client (ex: "Société Générale" et non "SG").
+5. FORMAT DES DATES : Pour la PREMIÈRE expérience (la plus récente), utilise "Depuis Mois Année" (ex: "Depuis Mai 2024"). Pour les autres, utilise "Mois Année à Mois Année" (ex: "Janvier 2020 à Décembre 2022").
+6. NOMS DES CLIENTS : Toujours utiliser le nom COMPLET de l'entreprise/client, JAMAIS de sigle (ex: "Crédit Agricole Corporate and Investment Bank" et non "CACIB", "Société Générale" et non "SG", "BNP Paribas" et non "BNPP").
 
 RÈGLES POUR LES COMPÉTENCES :
 - Si le CV contient déjà des compétences bien structurées (techniques, métiers, fonctionnelles), REPRENDS-LES TELLES QUELLES.
