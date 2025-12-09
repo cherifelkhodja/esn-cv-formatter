@@ -1,0 +1,2 @@
+# Ce fichier permet de garder le dossier output/ dans le repository Git.
+# Les fichiers DOCX générés ici ne seront pas commités (voir .gitignore).

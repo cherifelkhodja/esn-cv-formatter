@@ -1,0 +1,36 @@
+# =============================================================================
+# Dépendances Python - CV Formatter ESN
+# =============================================================================
+# Ce fichier liste toutes les bibliothèques nécessaires au fonctionnement
+# de l'outil d'automatisation de CV.
+# Installation : pip install -r requirements.txt
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# API Google Gemini - Intelligence Artificielle
+# -----------------------------------------------------------------------------
+# Bibliothèque officielle Google pour interagir avec l'API Gemini.
+# Utilisée pour l'extraction intelligente des données CV via le modèle
+# gemini-1.5-flash.
+google-generativeai>=0.8.0
+
+# -----------------------------------------------------------------------------
+# Templating Word - Génération DOCX
+# -----------------------------------------------------------------------------
+# Moteur de template Jinja2 pour fichiers Word (.docx).
+# Permet d'injecter les données extraites dans le template de l'ESN.
+docxtpl>=0.16.0
+
+# -----------------------------------------------------------------------------
+# Extraction PDF - Lecture des CVs
+# -----------------------------------------------------------------------------
+# Bibliothèque d'extraction de texte depuis les fichiers PDF.
+# Remplace PyPDF2 (deprecated) avec une API moderne.
+pypdf>=4.0.0
+
+# -----------------------------------------------------------------------------
+# Configuration - Variables d'environnement
+# -----------------------------------------------------------------------------
+# Gestion des fichiers .env pour les configurations sensibles
+# (clé API, paramètres, etc.)
+python-dotenv>=1.0.0
