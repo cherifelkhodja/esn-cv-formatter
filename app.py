@@ -157,6 +157,7 @@ RÈGLES IMPORTANTES :
 2. Anonymisation : NE JAMAIS inclure l'email, le téléphone ou l'adresse du candidat.
 3. Synthèse : Reformule les tâches pour qu'elles soient professionnelles et concises.
 4. CONCISION : Va à l'essentiel, évite les listes trop longues.
+5. FORMAT DES DATES : "Mois Année à Mois Année" (ex: "Janvier 2020 à Décembre 2022") ou "Depuis Mois Année" pour le poste actuel.
 
 RÈGLES POUR LES COMPÉTENCES :
 - Compétences techniques : Utilise des catégories SIMPLES (Langages, Frameworks, Base de données, Cloud, Outils, DevOps, etc.). Maximum 5-6 catégories.
@@ -187,7 +188,7 @@ FORMAT JSON ATTENDU :
   "experiences": [
     {
       "client": "Nom du client ou entreprise",
-      "periode": "Jan 2020 - Dec 2022",
+      "periode": "Janvier 2020 à Décembre 2022 (ou 'Depuis Janvier 2023' si poste actuel)",
       "titre": "Poste occupé",
       "contexte": "Description courte du contexte (1-2 phrases)",
       "taches": {
