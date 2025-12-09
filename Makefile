@@ -24,7 +24,7 @@ NC = \033[0m # No Color
 # Commandes principales
 # -----------------------------------------------------------------------------
 
-.PHONY: help build up down restart logs shell status clean
+.PHONY: help build up up-build down restart logs shell status clean
 
 ## help: Affiche cette aide
 help:
@@ -51,6 +51,9 @@ up:
 		--name $(CONTAINER_NAME) \
 		$(IMAGE_NAME)
 	@echo "$(GREEN)Application disponible sur http://localhost:$(PORT)$(NC)"
+
+## up-build: Construit l'image et démarre le conteneur
+up-build: build up
 
 ## down: Arrête et supprime le conteneur
 down:
