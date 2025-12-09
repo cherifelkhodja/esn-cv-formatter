@@ -8,7 +8,7 @@ Ce script transforme des CVs au format PDF en documents Word (.docx)
 standardisés selon le format de l'ESN Gemini Consulting.
 
 L'extraction intelligente des données est réalisée via l'API Google Gemini
-(modèle gemini-1.5-flash).
+(modèle gemini-2.5-flash-lite).
 
 Auteur: Cherif Elkhodja
 Version: 1.0.0
@@ -359,7 +359,7 @@ def appeler_gemini(texte_cv: str) -> dict:
     Envoie le texte du CV à l'API Gemini et récupère les données structurées.
 
     Cette fonction :
-    1. Configure le modèle Gemini (gemini-1.5-flash)
+    1. Configure le modèle Gemini (gemini-2.5-flash-lite)
     2. Envoie le prompt système + le texte du CV
     3. Nettoie et parse la réponse JSON
     4. Retourne les données sous forme de dictionnaire Python
@@ -380,9 +380,9 @@ def appeler_gemini(texte_cv: str) -> dict:
         # =================================================================
         # ÉTAPE 1 : Configuration du modèle Gemini
         # =================================================================
-        # On utilise le modèle gemini-1.5-flash pour sa rapidité
+        # On utilise le modèle gemini-2.5-flash-lite pour sa rapidité
         # et son bon rapport qualité/coût pour l'extraction de données
-        modele = genai.GenerativeModel('gemini-1.5-flash')
+        modele = genai.GenerativeModel('gemini-2.5-flash-lite')
 
         # =================================================================
         # ÉTAPE 2 : Construction du prompt complet

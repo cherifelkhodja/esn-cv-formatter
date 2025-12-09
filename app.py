@@ -8,7 +8,7 @@ Application web Flask permettant de transformer des CVs au format PDF en
 documents Word (.docx) standardisés selon le format de l'ESN Gemini Consulting.
 
 L'extraction intelligente des données est réalisée via l'API Google Gemini
-(modèle gemini-1.5-flash).
+(modèle gemini-2.5-flash-lite).
 
 Auteur: Cherif Elkhodja
 Version: 2.0.0
@@ -349,7 +349,7 @@ def appeler_gemini(texte_cv: str) -> dict:
 
     try:
         # Configuration du modèle
-        modele = genai.GenerativeModel('gemini-1.5-flash')
+        modele = genai.GenerativeModel('gemini-2.5-flash-lite')
 
         # Construction du prompt complet
         prompt_complet = f"""{PROMPT_SYSTEME}

@@ -276,7 +276,7 @@ L'interface utilise Bootstrap 5 et peut être personnalisée via :
 ### v1.0.0 (2025-12-09)
 - Version initiale (CLI)
 - Extraction PDF via pypdf
-- Intégration API Gemini (gemini-1.5-flash)
+- Intégration API Gemini (gemini-2.5-flash-lite)
 - Génération DOCX via docxtpl
 - Dockerfile multi-stage optimisé
 
