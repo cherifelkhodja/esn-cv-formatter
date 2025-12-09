@@ -486,14 +486,14 @@ def formater_langues(langues: list) -> list:
 
 def preparer_experiences_avec_sauts_de_page(experiences: list) -> list:
     """
-    Ajoute un indicateur de saut de page entre chaque expérience,
+    Ajoute un saut de page RichText entre chaque expérience,
     sauf pour la dernière.
 
     Args:
         experiences (list): Liste des expériences professionnelles
 
     Returns:
-        list: Liste des expériences avec l'indicateur 'saut_de_page'
+        list: Liste des expériences avec 'saut_de_page' RichText ou vide
     """
     experiences_preparees = []
     total = len(experiences)
@@ -501,7 +501,12 @@ def preparer_experiences_avec_sauts_de_page(experiences: list) -> list:
     for index, experience in enumerate(experiences):
         exp_copy = experience.copy()
         # Saut de page après chaque expérience sauf la dernière
-        exp_copy["saut_de_page"] = (index < total - 1)
+        if index < total - 1:
+            rt = RichText()
+            rt.add('\f')  # Caractère de saut de page
+            exp_copy["saut_de_page"] = rt
+        else:
+            exp_copy["saut_de_page"] = ""
         experiences_preparees.append(exp_copy)
 
     return experiences_preparees
