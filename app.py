@@ -161,7 +161,8 @@ RÈGLES IMPORTANTES :
 6. NOMS DES CLIENTS : Toujours utiliser le nom COMPLET de l'entreprise/client (ex: "Société Générale" et non "SG").
 
 RÈGLES POUR LES COMPÉTENCES :
-- Compétences techniques : CHOISIS les catégories les plus PERTINENTES selon le CV (ex: Langages, Outils, Méthodologies, Environnements, etc.). NE CRÉE PAS de catégories vides ou avec "None". Inclus UNIQUEMENT les catégories où il y a des compétences réelles.
+- Si le CV contient déjà des compétences bien structurées (techniques, métiers, fonctionnelles), REPRENDS-LES TELLES QUELLES.
+- Compétences techniques : CHOISIS les catégories les plus PERTINENTES selon le CV. NE CRÉE PAS de catégories vides ou avec "None". Inclus UNIQUEMENT les catégories où il y a des compétences réelles.
 - Compétences métiers : UNIQUEMENT les secteurs d'activité majeurs (ex: Banque, Assurance, Retail). Maximum 2-3 items. Laisser vide [] si non pertinent.
 - Compétences fonctionnelles : UNIQUEMENT les savoir-faire organisationnels clés (ex: Gestion de projet, Agilité). Maximum 2-3 items. Laisser vide [] si non pertinent.
 
