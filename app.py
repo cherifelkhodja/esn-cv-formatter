@@ -157,7 +157,7 @@ RÈGLES IMPORTANTES :
 2. Anonymisation : NE JAMAIS inclure l'email, le téléphone ou l'adresse du candidat.
 3. CONCISION sur les compétences, mais EXHAUSTIVITÉ sur les expériences.
 4. FORMAT DES DATES : Pour la PREMIÈRE expérience (la plus récente), utilise "Depuis Mois Année" (ex: "Depuis Mai 2024"). Pour les autres, utilise "Mois Année à Mois Année" (ex: "Janvier 2020 à Décembre 2022").
-5. NOMS DES CLIENTS : Toujours utiliser le nom COMPLET de l'entreprise/client, JAMAIS de sigle (ex: "Crédit Agricole Corporate and Investment Bank" et non "CACIB", "Société Générale" et non "SG", "BNP Paribas" et non "BNPP").
+5. NOMS DES CLIENTS : Toujours utiliser le nom COMPLET de l'entreprise/client, JAMAIS de sigle seul (ex: "Crédit Agricole CIB" et non "CACIB", "Société Générale" et non "SG", "BNP Paribas" et non "BNPP"). Note: "CIB" est accepté pour "Corporate and Investment Bank".
 
 RÈGLES POUR LES EXPÉRIENCES PROFESSIONNELLES :
 - CONSERVER TOUTES les réalisations/tâches du CV original, ne rien supprimer.
