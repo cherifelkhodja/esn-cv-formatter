@@ -158,6 +158,7 @@ RÈGLES IMPORTANTES :
 3. Synthèse : Reformule les tâches pour qu'elles soient professionnelles et concises.
 4. CONCISION : Va à l'essentiel, évite les listes trop longues.
 5. FORMAT DES DATES : "Mois Année à Mois Année" (ex: "Janvier 2020 à Décembre 2022") ou "Depuis Mois Année" pour le poste actuel.
+6. NOMS DES CLIENTS : Toujours utiliser le nom COMPLET de l'entreprise/client (ex: "Société Générale" et non "SG").
 
 RÈGLES POUR LES COMPÉTENCES :
 - Compétences techniques : Utilise des catégories SIMPLES (Langages, Frameworks, Base de données, Cloud, Outils, DevOps, etc.). Maximum 5-6 catégories.
