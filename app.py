@@ -161,7 +161,7 @@ RÈGLES IMPORTANTES :
 6. NOMS DES CLIENTS : Toujours utiliser le nom COMPLET de l'entreprise/client (ex: "Société Générale" et non "SG").
 
 RÈGLES POUR LES COMPÉTENCES :
-- Compétences techniques : Utilise des catégories SIMPLES (Langages, Frameworks, Base de données, Cloud, Outils, DevOps, etc.). Maximum 5-6 catégories.
+- Compétences techniques : CHOISIS les catégories les plus PERTINENTES selon le CV (ex: Langages, Outils, Méthodologies, Environnements, etc.). NE CRÉE PAS de catégories vides ou avec "None". Inclus UNIQUEMENT les catégories où il y a des compétences réelles.
 - Compétences métiers : UNIQUEMENT les secteurs d'activité majeurs (ex: Banque, Assurance, Retail). Maximum 2-3 items. Laisser vide [] si non pertinent.
 - Compétences fonctionnelles : UNIQUEMENT les savoir-faire organisationnels clés (ex: Gestion de projet, Agilité). Maximum 2-3 items. Laisser vide [] si non pertinent.
 
@@ -173,13 +173,11 @@ FORMAT JSON ATTENDU :
   },
   "resume_competences": {
     "techniques": {
-       "Langages": "Python, Java, JavaScript",
-       "Frameworks": "React, Spring Boot",
-       "Base de données": "PostgreSQL, MongoDB",
-       "Cloud": "AWS, Azure"
+       "Catégorie pertinente 1": "Valeurs séparées par virgules",
+       "Catégorie pertinente 2": "Valeurs séparées par virgules"
     },
-    "metiers": ["Banque", "Assurance"],
-    "fonctionnelles": ["Gestion de projet", "Méthode Agile"],
+    "metiers": ["Secteur 1", "Secteur 2"],
+    "fonctionnelles": ["Compétence 1", "Compétence 2"],
     "langues": ["Français : Natif", "Anglais : Courant"]
   },
   "formations": {
