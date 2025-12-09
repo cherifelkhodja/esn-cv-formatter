@@ -66,7 +66,7 @@ import google.generativeai as genai
 from pypdf import PdfReader
 
 # Bibliothèque pour le templating Word (injection de données dans .docx)
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, RichText
 
 
 # =============================================================================
@@ -397,6 +397,65 @@ Voici le texte du CV à analyser :
         raise
 
 
+def formater_langues(langues: list) -> list:
+    """
+    Formate les langues avec la langue en gras et le niveau en normal.
+
+    Format d'entrée: ["Français : Natif", "Anglais : Courant"]
+    Format de sortie: [RichText avec "Français" en gras et " : Natif" en normal]
+
+    Args:
+        langues (list): Liste des langues au format "Langue : Niveau"
+
+    Returns:
+        list: Liste d'objets RichText formatés
+    """
+    langues_formatees = []
+
+    for langue in langues:
+        rt = RichText()
+
+        # Séparer la langue du niveau
+        if " : " in langue:
+            parties = langue.split(" : ", 1)
+            langue_nom = parties[0]
+            niveau = parties[1] if len(parties) > 1 else ""
+
+            # Langue en gras, niveau en normal
+            rt.add(langue_nom, bold=True)
+            rt.add(f" : {niveau}")
+        else:
+            # Si pas de séparateur, tout en gras
+            rt.add(langue, bold=True)
+
+        langues_formatees.append(rt)
+
+    return langues_formatees
+
+
+def preparer_experiences_avec_sauts_de_page(experiences: list) -> list:
+    """
+    Ajoute un indicateur de saut de page entre chaque expérience,
+    sauf pour la dernière.
+
+    Args:
+        experiences (list): Liste des expériences professionnelles
+
+    Returns:
+        list: Liste des expériences avec l'indicateur 'saut_de_page'
+    """
+    experiences_preparees = []
+    total = len(experiences)
+
+    for index, experience in enumerate(experiences):
+        exp_copy = experience.copy()
+        # Saut de page après chaque expérience sauf la dernière
+        exp_copy["saut_de_page"] = (index < total - 1)
+        experiences_preparees.append(exp_copy)
+
+    return experiences_preparees
+
+
 def generer_docx(donnees_cv: dict, nom_fichier_sortie: str) -> Path:
     """
     Génère un fichier Word (.docx) à partir des données extraites.
@@ -417,12 +476,24 @@ def generer_docx(donnees_cv: dict, nom_fichier_sortie: str) -> Path:
         # Chargement du template
         template = DocxTemplate(CHEMIN_TEMPLATE)
 
+        # Préparation des compétences avec langues formatées
+        resume_competences = donnees_cv.get("resume_competences", {})
+        langues_originales = resume_competences.get("langues", [])
+
+        # Créer une copie pour ne pas modifier l'original
+        resume_competences_formatees = resume_competences.copy()
+        resume_competences_formatees["langues"] = formater_langues(langues_originales)
+
+        # Préparation des expériences avec sauts de page
+        experiences_originales = donnees_cv.get("experiences", [])
+        experiences_formatees = preparer_experiences_avec_sauts_de_page(experiences_originales)
+
         # Préparation du contexte
         contexte = {
             "profil": donnees_cv.get("profil", {}),
-            "resume_competences": donnees_cv.get("resume_competences", {}),
+            "resume_competences": resume_competences_formatees,
             "formations": donnees_cv.get("formations", {}),
-            "experiences": donnees_cv.get("experiences", []),
+            "experiences": experiences_formatees,
             "manager": MANAGER_INFO
         }
 
