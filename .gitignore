@@ -17,6 +17,9 @@ input/*.pdf
 # Documents Word générés
 output/*.docx
 
+# Fichiers PDF uploadés temporairement
+uploads/*.pdf
+
 # Template Word (fourni par l'utilisateur)
 template_gemini.docx
 

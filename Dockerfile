@@ -1,16 +1,19 @@
 # =============================================================================
-# Dockerfile - CV Formatter ESN
+# Dockerfile - CV Formatter ESN (Plateforme Web)
 # =============================================================================
 # Build multi-stage optimisé pour réduire la taille de l'image finale.
 #
 # Stage 1 (builder) : Installation des dépendances avec pip
-# Stage 2 (runtime) : Image finale allégée avec seulement le nécessaire
+# Stage 2 (runtime) : Image finale allégée avec Flask + Gunicorn
 #
 # Usage :
 #   docker build -t cv-formatter .
-#   docker run --rm -v $(pwd)/input:/app/input -v $(pwd)/output:/app/output \
+#   docker run -d -p 5000:5000 \
+#              -v $(pwd)/output:/app/output \
 #              -v $(pwd)/template_gemini.docx:/app/template_gemini.docx \
-#              --env-file .env cv-formatter
+#              --env-file .env \
+#              --name cv-formatter \
+#              cv-formatter
 # =============================================================================
 
 # =============================================================================
@@ -43,7 +46,6 @@ ENV PATH="/opt/venv/bin:$PATH"
 COPY requirements.txt .
 
 # Installation des dépendances Python dans l'environnement virtuel
-# --no-compile évite la compilation en bytecode (sera fait au runtime)
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
@@ -53,23 +55,25 @@ RUN pip install --upgrade pip && \
 # =============================================================================
 # Ce stage crée l'image finale allégée contenant uniquement :
 # - Python runtime
-# - Les dépendances installées
-# - Le code de l'application
+# - Les dépendances installées (Flask, Gunicorn, etc.)
+# - Le code de l'application web
 
 FROM python:3.11-slim AS runtime
 
 # Métadonnées de l'image
 LABEL maintainer="Cherif Elkhodja <cherif.elkhodja@geminiconsulting.fr>"
-LABEL description="CV Formatter ESN - Transformation automatique de CV PDF vers Word"
-LABEL version="1.0.0"
+LABEL description="CV Formatter ESN - Plateforme Web de transformation de CV"
+LABEL version="2.0.0"
 
-# Variables d'environnement pour l'exécution Python
+# Variables d'environnement pour l'exécution
 # - PYTHONDONTWRITEBYTECODE : Évite la création de fichiers .pyc
 # - PYTHONUNBUFFERED : Assure que les logs sont affichés en temps réel
 # - PYTHONFAULTHANDLER : Affiche le traceback en cas de crash
+# - FLASK_ENV : Mode de Flask (production par défaut)
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONFAULTHANDLER=1
+    PYTHONFAULTHANDLER=1 \
+    FLASK_ENV=production
 
 # Définition du répertoire de travail de l'application
 WORKDIR /app
@@ -81,12 +85,15 @@ COPY --from=builder /opt/venv /opt/venv
 # Activation de l'environnement virtuel
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Création des dossiers input et output
-# Ces dossiers seront montés en volumes lors de l'exécution
-RUN mkdir -p /app/input /app/output
+# Création des dossiers nécessaires
+# - uploads : Fichiers PDF temporaires uploadés
+# - output : CVs Word générés
+RUN mkdir -p /app/uploads /app/output
 
-# Copie du script principal Python
-COPY main.py .
+# Copie des fichiers de l'application
+COPY app.py .
+COPY templates/ ./templates/
+COPY static/ ./static/
 
 # Copie de la documentation (optionnel, utile pour le debug)
 COPY MEMORY.md .
@@ -99,6 +106,17 @@ COPY MEMORY.md .
 # de sécurité. Il contient la clé API et doit être fourni via --env-file
 # ou variables d'environnement.
 
-# Définition du point d'entrée
-# Le script main.py sera exécuté au démarrage du conteneur
-CMD ["python", "main.py"]
+# Exposition du port de l'application web
+EXPOSE 5000
+
+# Health check pour Docker/Kubernetes
+# Vérifie que l'application répond correctement
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/status')" || exit 1
+
+# Définition du point d'entrée avec Gunicorn (serveur WSGI de production)
+# - workers=2 : Nombre de workers (ajuster selon les ressources)
+# - bind=0.0.0.0:5000 : Écoute sur toutes les interfaces, port 5000
+# - timeout=120 : Timeout pour les requêtes longues (traitement IA)
+# - access-logfile=- : Logs d'accès sur stdout
+CMD ["gunicorn", "--workers=2", "--bind=0.0.0.0:5000", "--timeout=120", "--access-logfile=-", "app:app"]

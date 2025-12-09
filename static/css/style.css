@@ -1,0 +1,297 @@
+/* =============================================================================
+   CV Formatter ESN - Styles personnalisés
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   Variables CSS
+   ----------------------------------------------------------------------------- */
+:root {
+    --primary-color: #0d6efd;
+    --primary-dark: #0b5ed7;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --border-radius: 0.5rem;
+    --box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --box-shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --transition: all 0.3s ease;
+}
+
+/* -----------------------------------------------------------------------------
+   Base
+   ----------------------------------------------------------------------------- */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f5f7fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* -----------------------------------------------------------------------------
+   Navbar
+   ----------------------------------------------------------------------------- */
+.navbar {
+    padding: 0.75rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.25rem;
+    letter-spacing: -0.025em;
+}
+
+/* -----------------------------------------------------------------------------
+   Cards
+   ----------------------------------------------------------------------------- */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: none;
+    padding: 1rem 1.25rem;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+/* -----------------------------------------------------------------------------
+   Zone d'upload
+   ----------------------------------------------------------------------------- */
+.upload-zone {
+    border: 2px dashed #dee2e6;
+    border-radius: var(--border-radius);
+    background-color: #fafbfc;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.upload-zone:hover {
+    border-color: var(--primary-color);
+    background-color: #f0f7ff;
+}
+
+.upload-zone.drag-over {
+    border-color: var(--primary-color);
+    background-color: #e7f1ff;
+    transform: scale(1.01);
+}
+
+.upload-zone .upload-content i {
+    opacity: 0.7;
+}
+
+.upload-zone:hover .upload-content i {
+    opacity: 1;
+}
+
+/* -----------------------------------------------------------------------------
+   Avatar Circle
+   ----------------------------------------------------------------------------- */
+.avatar-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* -----------------------------------------------------------------------------
+   Liste des fichiers
+   ----------------------------------------------------------------------------- */
+.list-group-item {
+    border-left: none;
+    border-right: none;
+    padding: 1rem 1.25rem;
+    transition: var(--transition);
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.list-group-item h6 {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* -----------------------------------------------------------------------------
+   Boutons
+   ----------------------------------------------------------------------------- */
+.btn {
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: var(--transition);
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--box-shadow);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-danger:hover {
+    transform: translateY(-1px);
+}
+
+/* -----------------------------------------------------------------------------
+   Progress Bar
+   ----------------------------------------------------------------------------- */
+.progress {
+    border-radius: var(--border-radius);
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    border-radius: var(--border-radius);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* -----------------------------------------------------------------------------
+   Alerts
+   ----------------------------------------------------------------------------- */
+.alert {
+    border: none;
+    border-radius: var(--border-radius);
+}
+
+/* -----------------------------------------------------------------------------
+   Footer
+   ----------------------------------------------------------------------------- */
+.footer {
+    background-color: #fff !important;
+}
+
+/* -----------------------------------------------------------------------------
+   Responsive
+   ----------------------------------------------------------------------------- */
+@media (max-width: 991.98px) {
+    .col-lg-4 {
+        margin-top: 1.5rem;
+    }
+
+    .list-group-item h6 {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .upload-zone {
+        padding: 1rem;
+    }
+
+    .upload-zone .display-1 {
+        font-size: 3rem;
+    }
+
+    .list-group-item {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.75rem;
+    }
+
+    .list-group-item .btn-group {
+        width: 100%;
+    }
+
+    .list-group-item .btn-group .btn {
+        flex: 1;
+    }
+
+    .list-group-item h6 {
+        max-width: 100%;
+    }
+}
+
+/* -----------------------------------------------------------------------------
+   Animations
+   ----------------------------------------------------------------------------- */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.spinner-border {
+    animation: spinner-border 0.75s linear infinite;
+}
+
+/* Animation pour le drag & drop */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.drag-over .upload-content i {
+    animation: bounce 0.5s ease infinite;
+}
+
+/* -----------------------------------------------------------------------------
+   Utilitaires
+   ----------------------------------------------------------------------------- */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}

@@ -1,0 +1,421 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Colonne principale - Upload -->
+    <div class="col-lg-8">
+        <!-- Alertes de configuration -->
+        {% if not config.valide %}
+        <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+            <div>
+                <strong>Configuration incomplète</strong>
+                <ul class="mb-0 mt-1">
+                    {% for erreur in config.erreurs %}
+                    <li>{{ erreur }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Carte Upload -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-cloud-upload me-2"></i>
+                    Convertir un CV
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <!-- Zone de drop -->
+                    <div class="upload-zone mb-3" id="dropZone">
+                        <input type="file" class="d-none" id="fichierInput" name="fichier" accept=".pdf">
+                        <div class="upload-content text-center py-5">
+                            <i class="bi bi-file-earmark-pdf display-1 text-danger mb-3"></i>
+                            <h5>Glissez votre CV PDF ici</h5>
+                            <p class="text-muted mb-3">ou cliquez pour sélectionner un fichier</p>
+                            <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('fichierInput').click()">
+                                <i class="bi bi-folder2-open me-2"></i>
+                                Parcourir
+                            </button>
+                        </div>
+                        <div class="upload-selected d-none text-center py-4">
+                            <i class="bi bi-file-earmark-check display-4 text-success mb-2"></i>
+                            <p class="mb-1 fw-semibold" id="selectedFileName">fichier.pdf</p>
+                            <small class="text-muted" id="selectedFileSize">0 Ko</small>
+                        </div>
+                    </div>
+
+                    <!-- Barre de progression -->
+                    <div class="progress mb-3 d-none" id="progressContainer" style="height: 25px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" id="progressBar" style="width: 0%">
+                            <span id="progressText">Traitement en cours...</span>
+                        </div>
+                    </div>
+
+                    <!-- Message de résultat -->
+                    <div id="resultMessage" class="d-none"></div>
+
+                    <!-- Bouton de soumission -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" {% if not config.valide %}disabled{% endif %}>
+                            <i class="bi bi-magic me-2"></i>
+                            Transformer le CV
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Carte CVs générés -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-file-earmark-word me-2"></i>
+                    CVs Générés
+                </h5>
+                <span class="badge bg-white text-success">{{ fichiers_generes|length }}</span>
+            </div>
+            <div class="card-body p-0">
+                {% if fichiers_generes %}
+                <div class="list-group list-group-flush">
+                    {% for fichier in fichiers_generes %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-file-earmark-word text-primary fs-4 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">{{ fichier.nom }}</h6>
+                                <small class="text-muted">{{ fichier.date }} - {{ fichier.taille }}</small>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <a href="{{ url_for('telecharger_fichier', nom_fichier=fichier.nom) }}" class="btn btn-sm btn-outline-primary" title="Télécharger">
+                                <i class="bi bi-download"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="supprimerFichier('{{ fichier.nom }}')" title="Supprimer">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox display-4 mb-3"></i>
+                    <p class="mb-0">Aucun CV généré pour le moment</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Colonne latérale - Infos -->
+    <div class="col-lg-4">
+        <!-- Carte Manager -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white">
+                <h6 class="mb-0">
+                    <i class="bi bi-person-badge me-2"></i>
+                    Manager Contact
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="avatar-circle bg-primary text-white me-3">
+                        {{ manager.nom.split()[0][0] }}{{ manager.nom.split()[1][0] }}
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ manager.nom }}</h6>
+                        <small class="text-muted">Manager</small>
+                    </div>
+                </div>
+                <ul class="list-unstyled mb-0 small">
+                    <li class="mb-2">
+                        <i class="bi bi-envelope text-primary me-2"></i>
+                        <a href="mailto:{{ manager.email }}">{{ manager.email }}</a>
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-telephone text-primary me-2"></i>
+                        <a href="tel:{{ manager.telephone }}">{{ manager.telephone }}</a>
+                    </li>
+                    <li>
+                        <i class="bi bi-geo-alt text-primary me-2"></i>
+                        {{ manager.adresse }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Carte Instructions -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Comment ça marche ?
+                </h6>
+            </div>
+            <div class="card-body">
+                <ol class="mb-0 ps-3">
+                    <li class="mb-2">
+                        <strong>Uploadez</strong> votre CV au format PDF
+                    </li>
+                    <li class="mb-2">
+                        <strong>L'IA analyse</strong> automatiquement le contenu
+                    </li>
+                    <li class="mb-2">
+                        <strong>Téléchargez</strong> le CV formaté en Word
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Carte Fonctionnalités -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h6 class="mb-0">
+                    <i class="bi bi-stars me-2"></i>
+                    Fonctionnalités
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0 small">
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Extraction intelligente via IA (Gemini)
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Anonymisation automatique
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Format ESN standardisé
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Reformulation professionnelle
+                    </li>
+                    <li>
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Export Word (.docx)
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // ==========================================================================
+    // Gestion du Drag & Drop et Upload
+    // ==========================================================================
+
+    const dropZone = document.getElementById('dropZone');
+    const fichierInput = document.getElementById('fichierInput');
+    const uploadForm = document.getElementById('uploadForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const resultMessage = document.getElementById('resultMessage');
+
+    // Gestion du clic sur la zone de drop
+    dropZone.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'BUTTON') {
+            fichierInput.click();
+        }
+    });
+
+    // Gestion du drag over
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+
+    // Gestion du drag leave
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+    });
+
+    // Gestion du drop
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fichierInput.files = files;
+            afficherFichierSelectionne(files[0]);
+        }
+    });
+
+    // Gestion du changement de fichier
+    fichierInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            afficherFichierSelectionne(e.target.files[0]);
+        }
+    });
+
+    // Affichage du fichier sélectionné
+    function afficherFichierSelectionne(file) {
+        // Vérification de l'extension
+        if (!file.name.toLowerCase().endsWith('.pdf')) {
+            afficherMessage('error', 'Seuls les fichiers PDF sont acceptés');
+            return;
+        }
+
+        document.querySelector('.upload-content').classList.add('d-none');
+        document.querySelector('.upload-selected').classList.remove('d-none');
+        document.getElementById('selectedFileName').textContent = file.name;
+        document.getElementById('selectedFileSize').textContent = formatFileSize(file.size);
+
+        // Masquer le message de résultat précédent
+        resultMessage.classList.add('d-none');
+    }
+
+    // Formatage de la taille de fichier
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Octets';
+        const k = 1024;
+        const sizes = ['Octets', 'Ko', 'Mo', 'Go'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    // Gestion de la soumission du formulaire
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const file = fichierInput.files[0];
+        if (!file) {
+            afficherMessage('error', 'Veuillez sélectionner un fichier PDF');
+            return;
+        }
+
+        // Préparation de l'interface
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Traitement en cours...';
+        progressContainer.classList.remove('d-none');
+        resultMessage.classList.add('d-none');
+
+        // Animation de la barre de progression
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            if (progress < 90) {
+                progress += Math.random() * 10;
+                progressBar.style.width = progress + '%';
+
+                if (progress < 30) {
+                    progressText.textContent = 'Extraction du texte...';
+                } else if (progress < 60) {
+                    progressText.textContent = 'Analyse par l\'IA...';
+                } else {
+                    progressText.textContent = 'Génération du document...';
+                }
+            }
+        }, 500);
+
+        // Envoi du fichier
+        const formData = new FormData();
+        formData.append('fichier', file);
+
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            clearInterval(progressInterval);
+            progressBar.style.width = '100%';
+            progressText.textContent = 'Terminé !';
+
+            if (result.succes) {
+                progressBar.classList.remove('bg-primary');
+                progressBar.classList.add('bg-success');
+                afficherMessage('success', `
+                    <strong>CV transformé avec succès !</strong><br>
+                    <a href="/telecharger/${result.fichier_sortie}" class="btn btn-success btn-sm mt-2">
+                        <i class="bi bi-download me-1"></i>Télécharger ${result.fichier_sortie}
+                    </a>
+                `);
+
+                // Recharger la page après 2 secondes pour actualiser la liste
+                setTimeout(() => location.reload(), 2000);
+            } else {
+                progressBar.classList.remove('bg-primary');
+                progressBar.classList.add('bg-danger');
+                afficherMessage('error', result.message);
+            }
+
+        } catch (error) {
+            clearInterval(progressInterval);
+            progressBar.classList.remove('bg-primary');
+            progressBar.classList.add('bg-danger');
+            progressBar.style.width = '100%';
+            progressText.textContent = 'Erreur';
+            afficherMessage('error', 'Erreur de connexion au serveur');
+        }
+
+        // Réinitialisation du bouton
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-magic me-2"></i>Transformer le CV';
+    });
+
+    // Affichage des messages
+    function afficherMessage(type, message) {
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+        const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill';
+
+        resultMessage.innerHTML = `
+            <div class="alert ${alertClass} d-flex align-items-start">
+                <i class="bi ${icon} me-2 mt-1"></i>
+                <div>${message}</div>
+            </div>
+        `;
+        resultMessage.classList.remove('d-none');
+    }
+
+    // Suppression d'un fichier
+    async function supprimerFichier(nomFichier) {
+        if (!confirm(`Supprimer le fichier "${nomFichier}" ?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/supprimer/${nomFichier}`, {
+                method: 'POST'
+            });
+
+            const result = await response.json();
+
+            if (result.succes) {
+                location.reload();
+            } else {
+                alert('Erreur : ' + result.message);
+            }
+        } catch (error) {
+            alert('Erreur de connexion au serveur');
+        }
+    }
+
+    // Réinitialisation de la zone d'upload
+    function reinitialiserUpload() {
+        document.querySelector('.upload-content').classList.remove('d-none');
+        document.querySelector('.upload-selected').classList.add('d-none');
+        fichierInput.value = '';
+        progressContainer.classList.add('d-none');
+        progressBar.style.width = '0%';
+        progressBar.classList.remove('bg-success', 'bg-danger');
+        progressBar.classList.add('bg-primary');
+    }
+</script>
+{% endblock %}

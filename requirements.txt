@@ -1,10 +1,20 @@
 # =============================================================================
-# Dépendances Python - CV Formatter ESN
+# Dépendances Python - CV Formatter ESN (Plateforme Web)
 # =============================================================================
 # Ce fichier liste toutes les bibliothèques nécessaires au fonctionnement
-# de l'outil d'automatisation de CV.
+# de la plateforme web d'automatisation de CV.
 # Installation : pip install -r requirements.txt
 # =============================================================================
+
+# -----------------------------------------------------------------------------
+# Framework Web - Flask
+# -----------------------------------------------------------------------------
+# Micro-framework web Python léger et flexible.
+# Utilisé pour créer l'interface web et l'API REST.
+Flask>=3.0.0
+
+# Serveur WSGI de production (remplacement du serveur de dev Flask)
+gunicorn>=21.0.0
 
 # -----------------------------------------------------------------------------
 # API Google Gemini - Intelligence Artificielle
@@ -34,3 +44,9 @@ pypdf>=4.0.0
 # Gestion des fichiers .env pour les configurations sensibles
 # (clé API, paramètres, etc.)
 python-dotenv>=1.0.0
+
+# -----------------------------------------------------------------------------
+# Utilitaires
+# -----------------------------------------------------------------------------
+# Génération d'identifiants uniques pour les fichiers uploadés
+uuid6>=2024.1.12
