@@ -117,8 +117,22 @@ DOSSIER_UPLOAD = CHEMIN_RACINE / "uploads"
 # Dossier pour les fichiers générés (CVs Word)
 DOSSIER_OUTPUT = CHEMIN_RACINE / "output"
 
-# Chemin vers le template Word
-CHEMIN_TEMPLATE = CHEMIN_RACINE / "template_gemini.docx"
+# Configuration des templates Word disponibles
+TEMPLATES_DISPONIBLES = {
+    "gemini": {
+        "nom": "Gemini Consulting",
+        "fichier": "template_gemini.docx",
+        "description": "Template officiel Gemini Consulting"
+    },
+    "craftamania": {
+        "nom": "Craftamania",
+        "fichier": "template_craftamania.docx",
+        "description": "Template Craftamania"
+    }
+}
+
+# Template par défaut
+TEMPLATE_PAR_DEFAUT = "gemini"
 
 # Extensions de fichiers autorisées pour l'upload
 EXTENSIONS_AUTORISEES = {'pdf'}
@@ -228,6 +242,47 @@ def fichier_autorise(nom_fichier: str) -> bool:
            nom_fichier.rsplit('.', 1)[1].lower() in EXTENSIONS_AUTORISEES
 
 
+def obtenir_templates_disponibles() -> dict:
+    """
+    Récupère la liste des templates disponibles (fichiers existants).
+
+    Returns:
+        dict: Dictionnaire des templates disponibles avec leurs informations
+    """
+    templates = {}
+    for cle, info in TEMPLATES_DISPONIBLES.items():
+        chemin = CHEMIN_RACINE / info["fichier"]
+        if chemin.exists():
+            templates[cle] = {
+                **info,
+                "chemin": str(chemin)
+            }
+    return templates
+
+
+def obtenir_chemin_template(cle_template: str) -> Path:
+    """
+    Retourne le chemin vers un template spécifique.
+
+    Args:
+        cle_template (str): Clé du template (gemini, craftamania, etc.)
+
+    Returns:
+        Path: Chemin vers le fichier template
+
+    Raises:
+        ValueError: Si le template n'existe pas
+    """
+    if cle_template not in TEMPLATES_DISPONIBLES:
+        raise ValueError(f"Template inconnu: {cle_template}")
+
+    chemin = CHEMIN_RACINE / TEMPLATES_DISPONIBLES[cle_template]["fichier"]
+    if not chemin.exists():
+        raise ValueError(f"Fichier template non trouvé: {chemin}")
+
+    return chemin
+
+
 def verifier_configuration() -> dict:
     """
     Vérifie que la configuration est valide.
@@ -242,13 +297,15 @@ def verifier_configuration() -> dict:
     if not cle_api or cle_api == "votre_cle_api_gemini_ici":
         erreurs.append("Clé API Gemini non configurée")
 
-    # Vérification du template Word
-    if not CHEMIN_TEMPLATE.exists():
-        erreurs.append("Template Word (template_gemini.docx) non trouvé")
+    # Vérification qu'au moins un template est disponible
+    templates_existants = obtenir_templates_disponibles()
+    if not templates_existants:
+        erreurs.append("Aucun template Word (.docx) trouvé")
 
     return {
         "valide": len(erreurs) == 0,
-        "erreurs": erreurs
+        "erreurs": erreurs,
+        "templates": templates_existants
     }
 
 
@@ -461,13 +518,14 @@ def preparer_experiences_avec_sauts_de_page(experiences: list) -> list:
     return experiences_preparees
 
 
-def generer_docx(donnees_cv: dict, nom_fichier_sortie: str) -> Path:
+def generer_docx(donnees_cv: dict, nom_fichier_sortie: str, cle_template: str = None) -> Path:
     """
     Génère un fichier Word (.docx) à partir des données extraites.
 
     Args:
         donnees_cv (dict): Les données du CV extraites par Gemini
         nom_fichier_sortie (str): Le nom du fichier DOCX à générer
+        cle_template (str): Clé du template à utiliser (gemini, craftamania, etc.)
 
     Returns:
         Path: Chemin vers le fichier généré
@@ -475,11 +533,16 @@ def generer_docx(donnees_cv: dict, nom_fichier_sortie: str) -> Path:
     Raises:
         Exception: Si le template ne peut pas être chargé ou le fichier sauvegardé
     """
-    logger.info(f"Génération du document Word : {nom_fichier_sortie}")
+    # Utiliser le template par défaut si non spécifié
+    if cle_template is None:
+        cle_template = TEMPLATE_PAR_DEFAUT
+
+    logger.info(f"Génération du document Word : {nom_fichier_sortie} (template: {cle_template})")
 
     try:
         # Chargement du template
-        template = DocxTemplate(CHEMIN_TEMPLATE)
+        chemin_template = obtenir_chemin_template(cle_template)
+        template = DocxTemplate(chemin_template)
 
         # Préparation des compétences avec langues formatées
         resume_competences = donnees_cv.get("resume_competences", {})
@@ -517,17 +580,18 @@ def generer_docx(donnees_cv: dict, nom_fichier_sortie: str) -> Path:
         raise
 
 
-def traiter_cv(chemin_pdf: Path) -> dict:
+def traiter_cv(chemin_pdf: Path, cle_template: str = None) -> dict:
     """
     Traite un fichier CV PDF de bout en bout.
 
     Args:
         chemin_pdf (Path): Chemin vers le fichier PDF à traiter
+        cle_template (str): Clé du template à utiliser (gemini, craftamania, etc.)
 
     Returns:
         dict: Résultat du traitement avec 'succes', 'message' et 'fichier_sortie'
     """
-    logger.info(f"Traitement du CV : {chemin_pdf.name}")
+    logger.info(f"Traitement du CV : {chemin_pdf.name} (template: {cle_template or TEMPLATE_PAR_DEFAUT})")
 
     try:
         # Extraction du texte
@@ -543,9 +607,9 @@ def traiter_cv(chemin_pdf: Path) -> dict:
         # Analyse par Gemini
         donnees_cv = appeler_gemini(texte_cv)
 
-        # Génération du document Word
+        # Génération du document Word avec le template sélectionné
         nom_sortie = chemin_pdf.stem + "_formatted.docx"
-        chemin_sortie = generer_docx(donnees_cv, nom_sortie)
+        chemin_sortie = generer_docx(donnees_cv, nom_sortie, cle_template)
 
         return {
             "succes": True,
@@ -587,11 +651,16 @@ def index():
                 "taille": f"{fichier.stat().st_size / 1024:.1f} Ko"
             })
 
+    # Liste des templates disponibles
+    templates = obtenir_templates_disponibles()
+
     return render_template(
         'index.html',
         config=config,
         fichiers_generes=fichiers_generes,
-        manager=MANAGER_INFO
+        manager=MANAGER_INFO,
+        templates=templates,
+        template_defaut=TEMPLATE_PAR_DEFAUT
     )
 
 
@@ -640,6 +709,22 @@ def upload_fichier():
         }), 400
 
     try:
+        # Récupération du template sélectionné
+        cle_template = request.form.get('template', TEMPLATE_PAR_DEFAUT)
+
+        # Validation du template
+        templates_existants = obtenir_templates_disponibles()
+        if cle_template not in templates_existants:
+            # Fallback sur le premier template disponible
+            cle_template = next(iter(templates_existants.keys())) if templates_existants else None
+            if not cle_template:
+                return jsonify({
+                    "succes": False,
+                    "message": "Aucun template disponible"
+                }), 400
+
+        logger.info(f"Template sélectionné : {cle_template}")
+
         # Sécurisation du nom de fichier
         nom_securise = secure_filename(fichier.filename)
 
@@ -651,8 +736,8 @@ def upload_fichier():
         fichier.save(chemin_upload)
         logger.info(f"Fichier uploadé : {chemin_upload}")
 
-        # Traitement du CV
-        resultat = traiter_cv(chemin_upload)
+        # Traitement du CV avec le template sélectionné
+        resultat = traiter_cv(chemin_upload, cle_template)
 
         # Suppression du fichier uploadé après traitement
         if chemin_upload.exists():
@@ -713,6 +798,19 @@ def supprimer_fichier(nom_fichier: str):
         return jsonify({"succes": True, "message": "Fichier supprimé"})
 
     return jsonify({"succes": False, "message": "Fichier non trouvé"}), 404
+
+
+@app.route('/templates')
+def lister_templates():
+    """
+    Endpoint pour lister les templates disponibles.
+    Retourne un JSON avec les templates et leurs informations.
+    """
+    templates = obtenir_templates_disponibles()
+    return jsonify({
+        "templates": templates,
+        "defaut": TEMPLATE_PAR_DEFAUT
+    })
 
 
 @app.route('/status')

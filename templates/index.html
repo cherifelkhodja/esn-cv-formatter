@@ -79,6 +79,36 @@
                     <!-- Message de résultat -->
                     <div id="resultMessage" class="d-none mb-4"></div>
 
+                    <!-- Sélection du template -->
+                    {% if templates %}
+                    <div class="template-selector mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-file-earmark-richtext me-2"></i>
+                            Choisir le template
+                        </label>
+                        <div class="template-options">
+                            {% for cle, info in templates.items() %}
+                            <div class="template-option {% if cle == template_defaut %}active{% endif %}" data-template="{{ cle }}">
+                                <input type="radio" name="template" value="{{ cle }}" id="template_{{ cle }}"
+                                       {% if cle == template_defaut %}checked{% endif %} class="d-none">
+                                <div class="template-card">
+                                    <div class="template-icon">
+                                        <i class="bi bi-file-earmark-word"></i>
+                                    </div>
+                                    <div class="template-info">
+                                        <h6>{{ info.nom }}</h6>
+                                        <small>{{ info.description }}</small>
+                                    </div>
+                                    <div class="template-check">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
                     <!-- Bouton de soumission -->
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" {% if not config.valide %}disabled{% endif %}>
@@ -349,9 +379,15 @@
             }
         }, 400);
 
-        // Envoi du fichier
+        // Envoi du fichier avec le template sélectionné
         const formData = new FormData();
         formData.append('fichier', file);
+
+        // Ajout du template sélectionné
+        const templateSelectionne = document.querySelector('input[name="template"]:checked');
+        if (templateSelectionne) {
+            formData.append('template', templateSelectionne.value);
+        }
 
         try {
             const response = await fetch('/upload', {
@@ -443,5 +479,26 @@
         progressBar.classList.remove('bg-success', 'bg-danger');
         resultMessage.classList.add('d-none');
     }
+
+    // ==========================================================================
+    // Gestion de la sélection de template
+    // ==========================================================================
+    document.querySelectorAll('.template-option').forEach(option => {
+        option.addEventListener('click', function() {
+            // Retirer la classe active de toutes les options
+            document.querySelectorAll('.template-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+
+            // Ajouter la classe active à l'option cliquée
+            this.classList.add('active');
+
+            // Cocher le radio button correspondant
+            const radio = this.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+            }
+        });
+    });
 </script>
 {% endblock %}

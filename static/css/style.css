@@ -808,3 +808,130 @@ a:hover {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--gray-400);
 }
+
+/* ==========================================================================
+   Template Selector
+   ========================================================================== */
+
+.template-selector {
+    margin-top: 1rem;
+}
+
+.template-selector .form-label {
+    color: var(--gray-700);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+}
+
+.template-selector .form-label i {
+    color: var(--primary);
+}
+
+.template-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.template-option {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.template-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    background: var(--white);
+    transition: all 0.2s ease;
+}
+
+.template-option:hover .template-card {
+    border-color: var(--primary-light);
+    background: var(--primary-bg);
+}
+
+.template-option.active .template-card {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+    box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.15);
+}
+
+.template-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.template-icon i {
+    font-size: 1.5rem;
+    color: var(--white);
+}
+
+.template-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.template-info h6 {
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+    color: var(--gray-800);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.template-info small {
+    color: var(--gray-500);
+    font-size: 0.8rem;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.template-check {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s ease;
+}
+
+.template-check i {
+    font-size: 1.25rem;
+    color: var(--primary);
+}
+
+.template-option.active .template-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .template-options {
+        grid-template-columns: 1fr;
+    }
+
+    .template-card {
+        padding: 0.875rem;
+    }
+
+    .template-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .template-icon i {
+        font-size: 1.25rem;
+    }
+}
