@@ -47,6 +47,7 @@ up:
 		-p $(PORT):5000 \
 		-v $(PWD)/output:/app/output \
 		-v $(PWD)/template_gemini.docx:/app/template_gemini.docx \
+		-v $(PWD)/template_craftamania.docx:/app/template_craftamania.docx \
 		--env-file .env \
 		--name $(CONTAINER_NAME) \
 		$(IMAGE_NAME)
@@ -94,6 +95,7 @@ dev:
 		-p $(PORT):5000 \
 		-v $(PWD)/output:/app/output \
 		-v $(PWD)/template_gemini.docx:/app/template_gemini.docx \
+		-v $(PWD)/template_craftamania.docx:/app/template_craftamania.docx \
 		-v $(PWD)/app.py:/app/app.py \
 		-v $(PWD)/templates:/app/templates \
 		-v $(PWD)/static:/app/static \
@@ -147,8 +149,9 @@ check:
 	@echo "Fichier .env :"
 	@if [ -f .env ]; then echo "  $(GREEN)✓ Présent$(NC)"; else echo "  $(RED)✗ Manquant$(NC) - Lancez 'make init'"; fi
 	@echo ""
-	@echo "Template Word :"
-	@if [ -f template_gemini.docx ]; then echo "  $(GREEN)✓ Présent$(NC)"; else echo "  $(RED)✗ Manquant$(NC) - Placez votre template_gemini.docx"; fi
+	@echo "Templates Word :"
+	@if [ -f template_gemini.docx ]; then echo "  $(GREEN)✓ template_gemini.docx$(NC)"; else echo "  $(RED)✗ template_gemini.docx manquant$(NC)"; fi
+	@if [ -f template_craftamania.docx ]; then echo "  $(GREEN)✓ template_craftamania.docx$(NC)"; else echo "  $(YELLOW)○ template_craftamania.docx manquant (optionnel)$(NC)"; fi
 	@echo ""
 	@echo "Image Docker :"
 	@if docker images $(IMAGE_NAME) | grep -q $(IMAGE_NAME); then echo "  $(GREEN)✓ Construite$(NC)"; else echo "  $(YELLOW)○ Non construite$(NC) - Lancez 'make build'"; fi
