@@ -46,8 +46,8 @@ up:
 	@docker run -d \
 		-p $(PORT):5000 \
 		-v $(PWD)/output:/app/output \
-		-v $(PWD)/template_gemini.docx:/app/template_gemini.docx \
-		-v $(PWD)/template_craftamania.docx:/app/template_craftamania.docx \
+		$(if $(wildcard $(PWD)/template_gemini.docx),-v $(PWD)/template_gemini.docx:/app/template_gemini.docx) \
+		$(if $(wildcard $(PWD)/template_craftamania.docx),-v $(PWD)/template_craftamania.docx:/app/template_craftamania.docx) \
 		--env-file .env \
 		--name $(CONTAINER_NAME) \
 		$(IMAGE_NAME)
@@ -94,8 +94,8 @@ dev:
 	@docker run -it --rm \
 		-p $(PORT):5000 \
 		-v $(PWD)/output:/app/output \
-		-v $(PWD)/template_gemini.docx:/app/template_gemini.docx \
-		-v $(PWD)/template_craftamania.docx:/app/template_craftamania.docx \
+		$(if $(wildcard $(PWD)/template_gemini.docx),-v $(PWD)/template_gemini.docx:/app/template_gemini.docx) \
+		$(if $(wildcard $(PWD)/template_craftamania.docx),-v $(PWD)/template_craftamania.docx:/app/template_craftamania.docx) \
 		-v $(PWD)/app.py:/app/app.py \
 		-v $(PWD)/templates:/app/templates \
 		-v $(PWD)/static:/app/static \
