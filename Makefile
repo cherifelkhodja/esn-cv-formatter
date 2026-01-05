@@ -12,7 +12,7 @@
 # -----------------------------------------------------------------------------
 IMAGE_NAME = cv-formatter
 CONTAINER_NAME = cv-formatter
-PORT = 8080
+PORT = 8081
 
 # Couleurs pour l'affichage
 GREEN = \033[0;32m
